@@ -43,13 +43,13 @@ pipeline {
             parallel {
                 stage('build ruoyi-gateway') {
                     steps {
-                        sh "docker build --build-arg JAR_NAME=ruoyi-gateway -t buxiaomo/ruoyi-gateway:${params.version} -f Dockerfile ."
+                        sh "docker build --build-arg JAR_NAME=ruoyi-gateway -t buxiaomo/ruoyi-gateway:${params.version} -f service.Dockerfile ."
                         // sh "docker push buxiaomo/ruoyi-gateway:${params.version}"
                     }
                 }
                 stage('build ruoyi-auth') {
                     steps {
-                        sh "docker build --build-arg JAR_NAME=ruoyi-auth -t buxiaomo/ruoyi-auth:${params.version} -f Dockerfile ."
+                        sh "docker build --build-arg JAR_NAME=ruoyi-auth -t buxiaomo/ruoyi-auth:${params.version} -f service.Dockerfile ."
                         // sh "docker push buxiaomo/ruoyi-auth:${params.version}"
                     }
                 }
@@ -77,12 +77,12 @@ pipeline {
                         // sh "docker push buxiaomo/ruoyi-modules-file:${params.version}"
                     }
                 }
-                // stage('build ruoyi-visual-monitor') {
-                //     steps {
-                //         sh "docker build --build-arg MODULES_NAME=file -t buxiaomo/ruoyi-visual-monitor:${params.version} -f modules.Dockerfile ."
-                //         // sh "docker push buxiaomo/ruoyi-modules-file:${params.version}"
-                //     }
-                // }
+                stage('build ruoyi-visual-monitor') {
+                    steps {
+                        sh "docker build -t buxiaomo/ruoyi-visual-monitor:${params.version} -f monitor.Dockerfile ."
+                        // sh "docker push buxiaomo/ruoyi-modules-file:${params.version}"
+                    }
+                }
             }
         }
     }
