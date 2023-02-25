@@ -1,5 +1,7 @@
 pipeline {
-    agent any
+    agent { 
+        label "swarm"
+    }
 
     environment {
         REPOSITORY_URL = "https://github.com/buxiaomo/RuoYi.git"
@@ -21,7 +23,7 @@ pipeline {
         stage('checkout') {
             steps {
                 retry(3) {
-                    checkout scmGit(branches: [[name: "main"]], extensions: [], userRemoteConfigs: [[url: "${env.REPOSITORY_URL}"]])
+                    checkout scmGit(branches: [[name: "main"]], extensions: [[$class: 'CleanBeforeCheckout'],[$class: 'CloneOption', timeout: 120, shallow: true, noTags: true, depth: 1]], submoduleCfg: [], userRemoteConfigs: [[url: "${env.REPOSITORY_URL}"]])
                     checkout scmGit(branches: [[name: "refs/tags/${params.version}"]], extensions: [[$class: "RelativeTargetDirectory", relativeTargetDir: "RuoYi-Cloud"]], userRemoteConfigs: [[url: "https://gitee.com/y_project/RuoYi-Cloud.git"]])
                 }
             }
