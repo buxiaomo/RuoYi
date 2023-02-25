@@ -6,8 +6,9 @@ pipeline {
     environment {
         REPOSITORY_URL = "https://github.com/buxiaomo/RuoYi.git"
 
-        REGISTRY_AUTH = "dockerhub"
-        REGISTRY_HOST = "https://index.docker.io"
+        // REGISTRY_AUTH = "qingcloud"
+        REGISTRY_USER = "buxiaomo"
+        REGISTRY_HOST = "172.16.115.11:5000"
     }
 
     parameters{
@@ -35,8 +36,10 @@ pipeline {
         stage('maven package') {
             steps {
                 dir('RuoYi-Cloud') {
-                    withDockerContainer('maven:3.9.0') {
-                        sh "mvn clean package -Dmaven.test.skip=true"
+                    retry(3) {
+                        withDockerContainer('maven:3.9.0') {
+                            sh "mvn clean package -Dmaven.test.skip=true"
+                        }
                     }
                 }
             }
@@ -46,60 +49,52 @@ pipeline {
             parallel {
                 stage('build ruoyi-gateway') {
                     steps {
-                        sh "docker build -t buxiaomo/ruoyi-gateway:${params.version} -f gateway.Dockerfile ."
-                        withDockerRegistry(credentialsId: "${env.REGISTRY_AUTH}", url: "${env.REGISTRY_HOST}") {
-                            sh label: 'Push', script: "docker push buxiaomo/ruoyi-gateway:${params.version}"
-                        }
+                        sh label: 'Build', script: "docker build -t 172.16.115.11:5000/buxiaomo/ruoyi-gateway:${params.version} -f gateway.Dockerfile ."
+                        sh label: 'Push', script: "docker push 172.16.115.11:5000/buxiaomo/ruoyi-gateway:${params.version}"
                     }
                 }
                 stage('build ruoyi-auth') {
                     steps {
-                        sh "docker build -t buxiaomo/ruoyi-auth:${params.version} -f auth.Dockerfile ."
-                        withDockerRegistry(credentialsId: "${env.REGISTRY_AUTH}", url: "${env.REGISTRY_HOST}") {
-                            sh label: 'Push', script: "docker push buxiaomo/ruoyi-auth:${params.version}"
-                        }
+                        sh label: 'Build', script: "docker build -t 172.16.115.11:5000/buxiaomo/ruoyi-auth:${params.version} -f auth.Dockerfile ."
+                        sh label: 'Push', script: "docker push 172.16.115.11:5000/buxiaomo/ruoyi-auth:${params.version}"
                     }
                 }
                 stage('build ruoyi-modules-system') {
                     steps {
-                        sh "docker build -t buxiaomo/ruoyi-modules-system:${params.version} -f modules-system.Dockerfile ."
-                        withDockerRegistry(credentialsId: "${env.REGISTRY_AUTH}", url: "${env.REGISTRY_HOST}") {
-                            sh label: 'Push', script: "docker push buxiaomo/ruoyi-modules-system:${params.version}"
-                        }
+                        sh label: 'Build', script: "docker build -t 172.16.115.11:5000/buxiaomo/ruoyi-modules-system:${params.version} -f modules-system.Dockerfile ."
+                        sh label: 'Push', script: "docker push 172.16.115.11:5000/buxiaomo/ruoyi-modules-system:${params.version}"
                     }
                 }
                 stage('build ruoyi-modules-gen') {
                     steps {
-                        sh "docker build -t buxiaomo/ruoyi-modules-gen:${params.version} -f modules-gen.Dockerfile ."
-                        withDockerRegistry(credentialsId: "${env.REGISTRY_AUTH}", url: "${env.REGISTRY_HOST}") {
-                            sh label: 'Push', script: "docker push buxiaomo/ruoyi-modules-gen:${params.version}"
-                        }
+                        sh label: 'Build', script: "docker build -t 172.16.115.11:5000/buxiaomo/ruoyi-modules-gen:${params.version} -f modules-gen.Dockerfile ."
+                        sh label: 'Push', script: "docker push 172.16.115.11:5000/buxiaomo/ruoyi-modules-gen:${params.version}"
                     }
                 }
                 stage('build ruoyi-modules-job') {
                     steps {
-                        sh "docker build -t buxiaomo/ruoyi-modules-job:${params.version} -f modules-job.Dockerfile ."
-                        withDockerRegistry(credentialsId: "${env.REGISTRY_AUTH}", url: "${env.REGISTRY_HOST}") {
-                            sh label: 'Push', script: "docker push buxiaomo/ruoyi-modules-job:${params.version}"
-                        }
+                        sh label: 'Build', script: "docker build -t 172.16.115.11:5000/buxiaomo/ruoyi-modules-job:${params.version} -f modules-job.Dockerfile ."
+                        sh label: 'Push', script: "docker push 172.16.115.11:5000/buxiaomo/ruoyi-modules-job:${params.version}"
                     }
                 }
                 stage('build ruoyi-modules-file') {
                     steps {
-                        sh "docker build -t buxiaomo/ruoyi-modules-file:${params.version} -f modules-file.Dockerfile ."
-                        withDockerRegistry(credentialsId: "${env.REGISTRY_AUTH}", url: "${env.REGISTRY_HOST}") {
-                            sh label: 'Push', script: "docker push buxiaomo/ruoyi-modules-file:${params.version}"
-                        }
+                        sh label: 'Build', script: "docker build -t 172.16.115.11:5000/buxiaomo/ruoyi-modules-file:${params.version} -f modules-file.Dockerfile ."
+                        sh label: 'Push', script: "docker push 172.16.115.11:5000/buxiaomo/ruoyi-modules-file:${params.version}"
                     }
                 }
                 stage('build ruoyi-visual-monitor') {
                     steps {
-                        sh "docker build -t buxiaomo/ruoyi-visual-monitor:${params.version} -f visual-monitor.Dockerfile ."
-                        withDockerRegistry(credentialsId: "${env.REGISTRY_AUTH}", url: "${env.REGISTRY_HOST}") {
-                            sh label: 'Push', script: "docker push buxiaomo/ruoyi-visual-monitor:${params.version}"
-                        }
+                        sh label: 'Build', script: "docker build -t 172.16.115.11:5000/buxiaomo/ruoyi-visual-monitor:${params.version} -f visual-monitor.Dockerfile ."
+                        sh label: 'Push', script: "docker push 172.16.115.11:5000/buxiaomo/ruoyi-visual-monitor:${params.version}"
                     }
                 }
+            }
+        }
+
+        stage('deploy service') {
+            steps {
+                sh 'echo 部署'
             }
         }
     }
