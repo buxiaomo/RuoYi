@@ -43,44 +43,58 @@ pipeline {
             parallel {
                 stage('build ruoyi-gateway') {
                     steps {
-                        sh "docker build --build-arg JAR_NAME=ruoyi-gateway -t buxiaomo/ruoyi-gateway:${params.version} -f service.Dockerfile ."
-                        // sh "docker push buxiaomo/ruoyi-gateway:${params.version}"
+                        sh "docker build -t buxiaomo/ruoyi-gateway:${params.version} -f gateway.Dockerfile ."
+                        withDockerRegistry(credentialsId: 'dockerhub', url: 'index.docker.io') {
+                            sh "docker push buxiaomo/ruoyi-gateway:${params.version}"
+                        }
                     }
                 }
                 stage('build ruoyi-auth') {
                     steps {
-                        sh "docker build --build-arg JAR_NAME=ruoyi-auth -t buxiaomo/ruoyi-auth:${params.version} -f service.Dockerfile ."
-                        // sh "docker push buxiaomo/ruoyi-auth:${params.version}"
+                        sh "docker build -t buxiaomo/ruoyi-auth:${params.version} -f auth.Dockerfile ."
+                        withDockerRegistry(credentialsId: 'dockerhub', url: 'index.docker.io') {
+                            sh "docker push buxiaomo/ruoyi-auth:${params.version}"
+                        }
                     }
                 }
                 stage('build ruoyi-modules-system') {
                     steps {
-                        sh "docker build --build-arg MODULES_NAME=system -t buxiaomo/ruoyi-modules-system:${params.version} -f modules.Dockerfile ."
-                        // sh "docker push buxiaomo/ruoyi-modules-system:${params.version}"
+                        sh "docker build -t buxiaomo/ruoyi-modules-system:${params.version} -f modules-system.Dockerfile ."
+                        withDockerRegistry(credentialsId: 'dockerhub', url: 'index.docker.io') {
+                            sh "docker push buxiaomo/ruoyi-modules-system:${params.version}"
+                        }
                     }
                 }
                 stage('build ruoyi-modules-gen') {
                     steps {
-                        sh "docker build --build-arg MODULES_NAME=gen -t buxiaomo/ruoyi-modules-gen:${params.version} -f modules.Dockerfile ."
-                        // sh "docker push buxiaomo/ruoyi-modules-gen:${params.version}"
+                        sh "docker build -t buxiaomo/ruoyi-modules-gen:${params.version} -f modules-gen.Dockerfile ."
+                        withDockerRegistry(credentialsId: 'dockerhub', url: 'index.docker.io') {
+                            sh "docker push buxiaomo/ruoyi-modules-gen:${params.version}"
+                        }
                     }
                 }
                 stage('build ruoyi-modules-job') {
                     steps {
-                        sh "docker build --build-arg MODULES_NAME=job -t buxiaomo/ruoyi-modules-job:${params.version} -f modules.Dockerfile ."
-                        // sh "docker push buxiaomo/ruoyi-modules-job:${params.version}"
+                        sh "docker build -t buxiaomo/ruoyi-modules-job:${params.version} -f modules-job.Dockerfile ."
+                        withDockerRegistry(credentialsId: 'dockerhub', url: 'index.docker.io') {
+                            sh "docker push buxiaomo/ruoyi-modules-job:${params.version}"
+                        }
                     }
                 }
                 stage('build ruoyi-modules-file') {
                     steps {
-                        sh "docker build --build-arg MODULES_NAME=file -t buxiaomo/ruoyi-modules-file:${params.version} -f modules.Dockerfile ."
-                        // sh "docker push buxiaomo/ruoyi-modules-file:${params.version}"
+                        sh "docker build -t buxiaomo/ruoyi-modules-file:${params.version} -f modules-file.Dockerfile ."
+                        withDockerRegistry(credentialsId: 'dockerhub', url: 'index.docker.io') {
+                            sh "docker push buxiaomo/ruoyi-modules-file:${params.version}"
+                        }
                     }
                 }
                 stage('build ruoyi-visual-monitor') {
                     steps {
-                        sh "docker build -t buxiaomo/ruoyi-visual-monitor:${params.version} -f monitor.Dockerfile ."
-                        // sh "docker push buxiaomo/ruoyi-modules-file:${params.version}"
+                        sh "docker build -t buxiaomo/ruoyi-visual-monitor:${params.version} -f visual-monitor.Dockerfile ."
+                        withDockerRegistry(credentialsId: 'dockerhub', url: 'index.docker.io') {
+                            sh "docker push buxiaomo/ruoyi-visual-monitor:${params.version}"
+                        }
                     }
                 }
             }
