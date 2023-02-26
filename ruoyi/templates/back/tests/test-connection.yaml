@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "{{ include "ruoyi.fullname" . }}-test-connection"
+  labels:
+    {{- include "ruoyi.labels" . | nindent 4 }}
+  annotations:
+    "helm.sh/hook": test
+spec:
+  containers:
+    - name: wget
+      image: busybox
+      command: ['wget']
+      args: ['{{ include "ruoyi.fullname" . }}:{{ .Values.service.port }}']
+  restartPolicy: Never

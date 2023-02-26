@@ -89,6 +89,12 @@ pipeline {
                         sh label: 'Push', script: "docker push 172.16.115.11:5000/buxiaomo/ruoyi-visual-monitor:${params.version}"
                     }
                 }
+                stage('build ruoyi-vue') {
+                    steps {
+                        sh label: 'Build', script: "docker build -t 172.16.115.11:5000/buxiaomo/ruoyi-ui:${params.version} -f ruoyi-ui.Dockerfile ."
+                        sh label: 'Push', script: "docker push 172.16.115.11:5000/buxiaomo/ruoyi-ui:${params.version}"
+                    }
+                }
             }
         }
 
