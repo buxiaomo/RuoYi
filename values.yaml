@@ -6,4 +6,4 @@ hub: 172.16.115.11:5000/buxiaomo
 tag: v3.6.2
 
 nacos:
-  addr: nacos:8848
+  addr: nacos.infra.svc.cluster.local:8848

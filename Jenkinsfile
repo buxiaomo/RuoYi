@@ -4,10 +4,11 @@ pipeline {
     }
 
     environment {
+        PROJECT_NAME = "ruoyi"
+        PROJECT_ENV = "dev"
+
         REPOSITORY_URL = "https://github.com/buxiaomo/RuoYi.git"
 
-        // REGISTRY_AUTH = "qingcloud"
-        REGISTRY_USER = "buxiaomo"
         REGISTRY_HOST = "172.16.115.11:5000"
     }
 
@@ -49,50 +50,50 @@ pipeline {
             parallel {
                 stage('build ruoyi-gateway') {
                     steps {
-                        sh label: 'Build', script: "docker build -t 172.16.115.11:5000/buxiaomo/ruoyi-gateway:${params.version} -f gateway.Dockerfile ."
-                        sh label: 'Push', script: "docker push 172.16.115.11:5000/buxiaomo/ruoyi-gateway:${params.version}"
+                        sh label: 'Build', script: "docker build -t ${env.REGISTRY_HOST}/${env.PROJECT_NAME}/ruoyi-gateway:${params.version} -f gateway.Dockerfile ."
+                        sh label: 'Push', script: "docker push ${env.REGISTRY_HOST}/${env.PROJECT_NAME}/ruoyi-gateway:${params.version}"
                     }
                 }
                 stage('build ruoyi-auth') {
                     steps {
-                        sh label: 'Build', script: "docker build -t 172.16.115.11:5000/buxiaomo/ruoyi-auth:${params.version} -f auth.Dockerfile ."
-                        sh label: 'Push', script: "docker push 172.16.115.11:5000/buxiaomo/ruoyi-auth:${params.version}"
+                        sh label: 'Build', script: "docker build -t ${env.REGISTRY_HOST}/${env.PROJECT_NAME}/ruoyi-auth:${params.version} -f auth.Dockerfile ."
+                        sh label: 'Push', script: "docker push ${env.REGISTRY_HOST}/${env.PROJECT_NAME}/ruoyi-auth:${params.version}"
                     }
                 }
                 stage('build ruoyi-modules-system') {
                     steps {
-                        sh label: 'Build', script: "docker build -t 172.16.115.11:5000/buxiaomo/ruoyi-modules-system:${params.version} -f modules-system.Dockerfile ."
-                        sh label: 'Push', script: "docker push 172.16.115.11:5000/buxiaomo/ruoyi-modules-system:${params.version}"
+                        sh label: 'Build', script: "docker build -t ${env.REGISTRY_HOST}/${env.PROJECT_NAME}/ruoyi-modules-system:${params.version} -f modules-system.Dockerfile ."
+                        sh label: 'Push', script: "docker push ${env.REGISTRY_HOST}/${env.PROJECT_NAME}/ruoyi-modules-system:${params.version}"
                     }
                 }
                 stage('build ruoyi-modules-gen') {
                     steps {
-                        sh label: 'Build', script: "docker build -t 172.16.115.11:5000/buxiaomo/ruoyi-modules-gen:${params.version} -f modules-gen.Dockerfile ."
-                        sh label: 'Push', script: "docker push 172.16.115.11:5000/buxiaomo/ruoyi-modules-gen:${params.version}"
+                        sh label: 'Build', script: "docker build -t ${env.REGISTRY_HOST}/${env.PROJECT_NAME}/ruoyi-modules-gen:${params.version} -f modules-gen.Dockerfile ."
+                        sh label: 'Push', script: "docker push ${env.REGISTRY_HOST}/${env.PROJECT_NAME}/ruoyi-modules-gen:${params.version}"
                     }
                 }
                 stage('build ruoyi-modules-job') {
                     steps {
-                        sh label: 'Build', script: "docker build -t 172.16.115.11:5000/buxiaomo/ruoyi-modules-job:${params.version} -f modules-job.Dockerfile ."
-                        sh label: 'Push', script: "docker push 172.16.115.11:5000/buxiaomo/ruoyi-modules-job:${params.version}"
+                        sh label: 'Build', script: "docker build -t ${env.REGISTRY_HOST}/${env.PROJECT_NAME}/ruoyi-modules-job:${params.version} -f modules-job.Dockerfile ."
+                        sh label: 'Push', script: "docker push ${env.REGISTRY_HOST}/${env.PROJECT_NAME}/ruoyi-modules-job:${params.version}"
                     }
                 }
                 stage('build ruoyi-modules-file') {
                     steps {
-                        sh label: 'Build', script: "docker build -t 172.16.115.11:5000/buxiaomo/ruoyi-modules-file:${params.version} -f modules-file.Dockerfile ."
-                        sh label: 'Push', script: "docker push 172.16.115.11:5000/buxiaomo/ruoyi-modules-file:${params.version}"
+                        sh label: 'Build', script: "docker build -t ${env.REGISTRY_HOST}/${env.PROJECT_NAME}/ruoyi-modules-file:${params.version} -f modules-file.Dockerfile ."
+                        sh label: 'Push', script: "docker push ${env.REGISTRY_HOST}/${env.PROJECT_NAME}/ruoyi-modules-file:${params.version}"
                     }
                 }
                 stage('build ruoyi-visual-monitor') {
                     steps {
-                        sh label: 'Build', script: "docker build -t 172.16.115.11:5000/buxiaomo/ruoyi-visual-monitor:${params.version} -f visual-monitor.Dockerfile ."
-                        sh label: 'Push', script: "docker push 172.16.115.11:5000/buxiaomo/ruoyi-visual-monitor:${params.version}"
+                        sh label: 'Build', script: "docker build -t ${env.REGISTRY_HOST}/${env.PROJECT_NAME}/ruoyi-visual-monitor:${params.version} -f visual-monitor.Dockerfile ."
+                        sh label: 'Push', script: "docker push ${env.REGISTRY_HOST}/${env.PROJECT_NAME}/ruoyi-visual-monitor:${params.version}"
                     }
                 }
                 stage('build ruoyi-vue') {
                     steps {
-                        sh label: 'Build', script: "docker build -t 172.16.115.11:5000/buxiaomo/ruoyi-ui:${params.version} -f ruoyi-ui.Dockerfile ."
-                        sh label: 'Push', script: "docker push 172.16.115.11:5000/buxiaomo/ruoyi-ui:${params.version}"
+                        sh label: 'Build', script: "docker build -t ${env.REGISTRY_HOST}/${env.PROJECT_NAME}/ruoyi-ui:${params.version} -f ruoyi-ui.Dockerfile ."
+                        sh label: 'Push', script: "docker push ${env.REGISTRY_HOST}/${env.PROJECT_NAME}/ruoyi-ui:${params.version}"
                     }
                 }
             }
@@ -101,7 +102,7 @@ pipeline {
         stage('deploy service') {
             steps {
                 withKubeConfig(caCertificate: '', clusterName: 'kubernetes', contextName: 'default', credentialsId: 'k8s', namespace: 'ruoyi', restrictKubeConfigAccess: false, serverUrl: 'https://172.16.115.11:6443') {
-                    sh 'helm upgrade -i ruoyi -f ./values.yaml ruoyi --create-namespace --namespace ruoyi'
+                    sh "helm upgrade -i ruoyi --set hub=${env.REGISTRY_HOST}/${env.PROJECT_NAME} --set tag=${params.version} --set nacos.addr=nacos:8848 ruoyi --create-namespace --namespace ${env.PROJECT_NAME}-${env.PROJECT_ENV}"
                 }
             }
         }
