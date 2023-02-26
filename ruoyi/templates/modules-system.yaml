@@ -67,7 +67,7 @@ spec:
             name: ruoyi-modules-system
       containers:
         - name: ruoyi-modules-system
-          image: "{{ .Values.registry.addr }}/buxiaomo/ruoyi-modules-system:v3.6.2"
+          image: "{{ .Values.hub }}/ruoyi-modules-system:{{ .Values.tag }}"
           imagePullPolicy: Always
           volumeMounts:
             - name: ruoyi-modules-system

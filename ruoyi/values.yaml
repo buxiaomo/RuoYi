@@ -2,10 +2,10 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
-version: v3.6.2
+domainName: yuoyi.example.com
 
-registry:
-  addr: registry:5000
+hub: registry:5000/ruoyi
+tag: v3.6.2
 
 nacos:
   addr: nacos:8848

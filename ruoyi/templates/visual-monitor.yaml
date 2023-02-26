@@ -66,7 +66,7 @@ spec:
             name: ruoyi-visual-monitor
       containers:
         - name: ruoyi-visual-monitor
-          image: "{{ .Values.registry.addr }}/buxiaomo/ruoyi-visual-monitor:v3.6.2"
+          image: "{{ .Values.hub }}/ruoyi-visual-monitor:{{ .Values.tag }}"
           imagePullPolicy: Always
           volumeMounts:
             - name: ruoyi-visual-monitor

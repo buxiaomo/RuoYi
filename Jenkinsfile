@@ -100,7 +100,7 @@ pipeline {
 
         stage('deploy service') {
             steps {
-                sh 'helm upgrade -i ruoyi -f ./values.yaml ruoyi--create-namespace --namespace ruoyi'
+                sh 'helm upgrade -i ruoyi -f ./values.yaml ruoyi --create-namespace --namespace ruoyi'
             }
         }
     }

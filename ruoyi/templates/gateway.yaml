@@ -34,7 +34,7 @@ data:
           eager: true
           transport:
             # 控制台地址
-            dashboard: 127.0.0.1:8718
+            dashboard: {{ .Values.domainName }}
           # nacos配置持久化
           datasource:
             ds1:
@@ -82,7 +82,7 @@ spec:
             name: ruoyi-gateway
       containers:
         - name: ruoyi-gateway
-          image: "{{ .Values.registry.addr }}/buxiaomo/ruoyi-gateway:v3.6.2"
+          image: "{{ .Values.hub }}/ruoyi-gateway:{{ .Values.tag }}"
           imagePullPolicy: Always
           volumeMounts:
             - name: ruoyi-gateway

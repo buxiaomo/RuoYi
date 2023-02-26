@@ -2,10 +2,8 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
-version: v3.6.2
-
-registry:
-  addr: 172.16.115.11:5000
+hub: 172.16.115.11:5000/buxiaomo
+tag: v3.6.2
 
 nacos:
   addr: nacos:8848
