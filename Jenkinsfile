@@ -100,7 +100,9 @@ pipeline {
 
         stage('deploy service') {
             steps {
-                sh 'helm upgrade -i ruoyi -f ./values.yaml ruoyi --create-namespace --namespace ruoyi'
+                withKubeConfig(caCertificate: '', clusterName: 'kubernetes', contextName: 'default', credentialsId: 'k8s', namespace: 'ruoyi', restrictKubeConfigAccess: false, serverUrl: 'https://172.16.115.11:6443') {
+                    sh 'helm upgrade -i ruoyi -f ./values.yaml ruoyi --create-namespace --namespace ruoyi'
+                }
             }
         }
     }
