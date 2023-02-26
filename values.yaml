@@ -5,7 +5,7 @@
 version: v3.6.2
 
 registry:
-  addr: registry:5000
+  addr: 172.16.115.11:5000
 
 nacos:
   addr: nacos:8848
