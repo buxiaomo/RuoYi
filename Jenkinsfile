@@ -34,11 +34,11 @@ pipeline {
             }
         }
 
-        stage('maven package') {
+        stage('maven') {
             steps {
                 dir('RuoYi-Cloud') {
                     retry(3) {
-                        withDockerContainer('maven:3.9.0') {
+                        withDockerContainer(image: 'registry.cn-hangzhou.aliyuncs.com/buxiaomo/maven:3.9.0', args: '-v m2:/app/.m2') {
                             sh "mvn clean package -Dmaven.test.skip=true"
                         }
                     }
@@ -50,50 +50,50 @@ pipeline {
             parallel {
                 stage('build ruoyi-gateway') {
                     steps {
-                        sh label: 'Build', script: "docker build -t ${env.REGISTRY_HOST}/${env.PROJECT_NAME}/ruoyi-gateway:${params.version} -f gateway.Dockerfile ."
-                        sh label: 'Push', script: "docker push ${env.REGISTRY_HOST}/${env.PROJECT_NAME}/ruoyi-gateway:${params.version}"
+                        sh label: 'Build', script: "buildah bud -t ${env.REGISTRY_HOST}/${env.PROJECT_NAME}/ruoyi-gateway:${params.version} -f gateway.Dockerfile ."
+                        sh label: 'Push', script: "buildah push --tls-verify=false ${env.REGISTRY_HOST}/${env.PROJECT_NAME}/ruoyi-gateway:${params.version}"
                     }
                 }
                 stage('build ruoyi-auth') {
                     steps {
-                        sh label: 'Build', script: "docker build -t ${env.REGISTRY_HOST}/${env.PROJECT_NAME}/ruoyi-auth:${params.version} -f auth.Dockerfile ."
-                        sh label: 'Push', script: "docker push ${env.REGISTRY_HOST}/${env.PROJECT_NAME}/ruoyi-auth:${params.version}"
+                        sh label: 'Build', script: "buildah bud -t ${env.REGISTRY_HOST}/${env.PROJECT_NAME}/ruoyi-auth:${params.version} -f auth.Dockerfile ."
+                        sh label: 'Push', script: "buildah push --tls-verify=false ${env.REGISTRY_HOST}/${env.PROJECT_NAME}/ruoyi-auth:${params.version}"
                     }
                 }
                 stage('build ruoyi-modules-system') {
                     steps {
-                        sh label: 'Build', script: "docker build -t ${env.REGISTRY_HOST}/${env.PROJECT_NAME}/ruoyi-modules-system:${params.version} -f modules-system.Dockerfile ."
-                        sh label: 'Push', script: "docker push ${env.REGISTRY_HOST}/${env.PROJECT_NAME}/ruoyi-modules-system:${params.version}"
+                        sh label: 'Build', script: "buildah bud -t ${env.REGISTRY_HOST}/${env.PROJECT_NAME}/ruoyi-modules-system:${params.version} -f modules-system.Dockerfile ."
+                        sh label: 'Push', script: "buildah push --tls-verify=false ${env.REGISTRY_HOST}/${env.PROJECT_NAME}/ruoyi-modules-system:${params.version}"
                     }
                 }
                 stage('build ruoyi-modules-gen') {
                     steps {
-                        sh label: 'Build', script: "docker build -t ${env.REGISTRY_HOST}/${env.PROJECT_NAME}/ruoyi-modules-gen:${params.version} -f modules-gen.Dockerfile ."
-                        sh label: 'Push', script: "docker push ${env.REGISTRY_HOST}/${env.PROJECT_NAME}/ruoyi-modules-gen:${params.version}"
+                        sh label: 'Build', script: "buildah bud -t ${env.REGISTRY_HOST}/${env.PROJECT_NAME}/ruoyi-modules-gen:${params.version} -f modules-gen.Dockerfile ."
+                        sh label: 'Push', script: "buildah push --tls-verify=false ${env.REGISTRY_HOST}/${env.PROJECT_NAME}/ruoyi-modules-gen:${params.version}"
                     }
                 }
                 stage('build ruoyi-modules-job') {
                     steps {
-                        sh label: 'Build', script: "docker build -t ${env.REGISTRY_HOST}/${env.PROJECT_NAME}/ruoyi-modules-job:${params.version} -f modules-job.Dockerfile ."
-                        sh label: 'Push', script: "docker push ${env.REGISTRY_HOST}/${env.PROJECT_NAME}/ruoyi-modules-job:${params.version}"
+                        sh label: 'Build', script: "buildah bud -t ${env.REGISTRY_HOST}/${env.PROJECT_NAME}/ruoyi-modules-job:${params.version} -f modules-job.Dockerfile ."
+                        sh label: 'Push', script: "buildah push --tls-verify=false ${env.REGISTRY_HOST}/${env.PROJECT_NAME}/ruoyi-modules-job:${params.version}"
                     }
                 }
                 stage('build ruoyi-modules-file') {
                     steps {
-                        sh label: 'Build', script: "docker build -t ${env.REGISTRY_HOST}/${env.PROJECT_NAME}/ruoyi-modules-file:${params.version} -f modules-file.Dockerfile ."
-                        sh label: 'Push', script: "docker push ${env.REGISTRY_HOST}/${env.PROJECT_NAME}/ruoyi-modules-file:${params.version}"
+                        sh label: 'Build', script: "buildah bud -t ${env.REGISTRY_HOST}/${env.PROJECT_NAME}/ruoyi-modules-file:${params.version} -f modules-file.Dockerfile ."
+                        sh label: 'Push', script: "buildah push --tls-verify=false ${env.REGISTRY_HOST}/${env.PROJECT_NAME}/ruoyi-modules-file:${params.version}"
                     }
                 }
                 stage('build ruoyi-visual-monitor') {
                     steps {
-                        sh label: 'Build', script: "docker build -t ${env.REGISTRY_HOST}/${env.PROJECT_NAME}/ruoyi-visual-monitor:${params.version} -f visual-monitor.Dockerfile ."
-                        sh label: 'Push', script: "docker push ${env.REGISTRY_HOST}/${env.PROJECT_NAME}/ruoyi-visual-monitor:${params.version}"
+                        sh label: 'Build', script: "buildah bud -t ${env.REGISTRY_HOST}/${env.PROJECT_NAME}/ruoyi-visual-monitor:${params.version} -f visual-monitor.Dockerfile ."
+                        sh label: 'Push', script: "buildah push --tls-verify=false ${env.REGISTRY_HOST}/${env.PROJECT_NAME}/ruoyi-visual-monitor:${params.version}"
                     }
                 }
                 stage('build ruoyi-vue') {
                     steps {
-                        sh label: 'Build', script: "docker build -t ${env.REGISTRY_HOST}/${env.PROJECT_NAME}/ruoyi-ui:${params.version} -f ruoyi-ui.Dockerfile ."
-                        sh label: 'Push', script: "docker push ${env.REGISTRY_HOST}/${env.PROJECT_NAME}/ruoyi-ui:${params.version}"
+                        sh label: 'Build', script: "buildah bud -t ${env.REGISTRY_HOST}/${env.PROJECT_NAME}/ruoyi-ui:${params.version} -f ruoyi-ui.Dockerfile ."
+                        sh label: 'Push', script: "buildah push --tls-verify=false ${env.REGISTRY_HOST}/${env.PROJECT_NAME}/ruoyi-ui:${params.version}"
                     }
                 }
             }
@@ -107,4 +107,9 @@ pipeline {
             }
         }
     }
+    // post { 
+    //     cleanup{
+    //         cleanWs()
+    //     }
+    // }
 }
